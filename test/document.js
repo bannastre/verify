@@ -21,4 +21,19 @@ describe('Document', () => {
         });
     });
   });
+
+  describe('#accept documents', () => {
+    it('should allow a user to post JSON to the api', (done) => {
+      const data = { dateOfBirth: '28.10.1983' };
+
+      chai.request(app)
+        .post('/document')
+        .send(data)
+        .end((err, res) => {
+          expect(res.body).to.eql(data);
+          expect(res).to.have.status(200);
+          done();
+        });
+    });
+  });
 });

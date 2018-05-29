@@ -1,5 +1,5 @@
 const express = require('express');
-const DOB = require('../models/dob');
+const Document = require('../models/document');
 
 const router = express.Router();
 
@@ -9,8 +9,11 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const dob = new DOB(req.body.dateOfBirth);
-  res.json({ dateOfBirth: dob.compile() });
+  if (!req.body.type) {
+    res.status(400).json({ message: 'Document Type must be Supplied' });
+  }
+  const document = new Document(req.body);
+  res.json(document.classify());
 });
 
 module.exports = router;

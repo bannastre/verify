@@ -22,18 +22,35 @@ describe('Document', () => {
     });
   });
 
-  describe('#accept documents', () => {
-    it('should allow a user to post JSON to the api', (done) => {
-      const data = { dateOfBirth: '28.10.1983' };
+  describe('#classify documents', () => {
+    describe('success', () => {
+      it('can classify a document', (done) => {
+        const data = { type: 'id', dateOfBirth: '28.10.1983' };
 
-      chai.request(app)
-        .post('/document')
-        .send(data)
-        .end((err, res) => {
-          expect(res.body).to.eql(data);
-          expect(res).to.have.status(200);
-          done();
-        });
+        chai.request(app)
+          .post('/document')
+          .send(data)
+          .end((err, res) => {
+            expect(res).to.have.status(200);
+            expect(res.body).to.eql('id');
+            done();
+          });
+      });
+    });
+
+    describe('failure', () => {
+      it('throws an error if the document type is not supplied', (done) => {
+        const data = { invalid: 'document' };
+
+        chai.request(app)
+          .post('/document')
+          .send(data)
+          .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body.message).to.eql('Document Type must be Supplied');
+            done();
+          });
+      });
     });
   });
 });

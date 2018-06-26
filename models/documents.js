@@ -1,9 +1,11 @@
 module.exports = class Document {
-  constructor(doc) {
-    this.doc = doc;
+  constructor(name) {
+    this.name = name;
+    this.hash = '';
   }
 
-  classify() {
-    return this.doc.type;
+  encrypt(data) {
+    this.hash = data;
+    return data;
   }
 };

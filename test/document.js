@@ -9,45 +9,64 @@ chai.use(chaiHttp);
 
 
 describe('Document', () => {
-  describe('#status', () => {
-    it('should return a Status of OK', (done) => {
+  let dob;
+
+  beforeEach((done) => {
+    dob = { name: 'dob', payload: { day: 28, month: 10, year: 1983 } };
+    done();
+  });
+
+  describe('#read documents', () => {
+    it('should get a document and return a Status of OK', (done) => {
       chai.request(app)
         .get('/document')
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body.status).to.equal('OK');
-          expect(res.body.router).to.equal('document');
           done();
         });
     });
   });
 
-  describe('#classify documents', () => {
+  describe('#create documents', () => {
     describe('success', () => {
-      it('can classify a document', (done) => {
-        const data = { type: 'id', dateOfBirth: '28.10.1983' };
-
+      it('can post a document and encrypt the payload', (done) => {
         chai.request(app)
           .post('/document')
-          .send(data)
+          .send(dob)
           .end((err, res) => {
             expect(res).to.have.status(200);
-            expect(res.body).to.eql('id');
+            expect(res.body).to.eql(dob.payload);
             done();
           });
       });
     });
+  });
 
-    describe('failure', () => {
-      it('throws an error if the document type is not supplied', (done) => {
-        const data = { invalid: 'document' };
-
+  describe('#create documents', () => {
+    describe('success', () => {
+      it('can post a document and encrypt the payload', (done) => {
         chai.request(app)
-          .post('/document')
-          .send(data)
+          .patch('/document')
+          .send(dob)
           .end((err, res) => {
-            expect(res).to.have.status(400);
-            expect(res.body.message).to.eql('Document Type must be Supplied');
+            expect(res).to.have.status(200);
+            expect(res.body).to.eql({ dob });
+            done();
+          });
+      });
+    });
+  });
+
+  describe('#create documents', () => {
+    describe('success', () => {
+      it('can post a document and encrypt the payload', (done) => {
+        chai.request(app)
+          .delete('/document')
+          .send(dob)
+          .end((err, res) => {
+            expect(res).to.have.status(200);
+            expect(res.body).to.eql({ dob });
             done();
           });
       });

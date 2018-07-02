@@ -3,16 +3,23 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "test": "NODE_ENV=test mocha ./test",
-    "start": "node ./bin/www"
+    "start": "NODE_ENV=live node ./bin/www",
+    "start_dev": "NODE_ENV=dev node ./bin/www",
+    "test": "NODE_ENV=test mocha ./test --exit"
   },
   "dependencies": {
+    "app-root-path": "^2.1.0",
+    "bcrypt": "^2.0.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
+    "dotenv": "^6.0.0",
     "ejs": "~2.5.7",
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
-    "morgan": "~1.9.0"
+    "knex": "^0.14.6",
+    "morgan": "~1.9.0",
+    "pg": "^7.4.3",
+    "winston": "^3.0.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",

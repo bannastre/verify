@@ -1,10 +1,10 @@
+const bcrypt = require('bcrypt');
+const logger = require('../helpers/logging');
+
 module.exports = class Document {
   constructor(doc) {
     this.name = doc.name;
-    this.hash = this.constructor.encrypt(doc.payload);
-  }
-
-  static encrypt(payload) {
-    return payload;
+    this.hash = () => bcrypt.hash(JSON.stringify(doc.data), 10)
+      .catch(err => logger.error(err.message));
   }
 };

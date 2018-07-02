@@ -1,19 +1,18 @@
 const app = require('../app');
 
+const bcrypt = require('bcrypt');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const knex = require('../db/knex.js');
 const logger = require('../helpers/logging');
+const Document = require('../models/documents');
 
 const { expect } = chai;
 
 chai.use(chaiHttp);
 
 describe('Document', () => {
-  let dob;
-
   beforeEach((done) => {
-    dob = { name: 'dob', payload: { day: 28, month: 10, year: 1983 } };
     knex.migrate.rollback()
       .then(() => knex.migrate.latest())
       .then(() => done())
@@ -27,6 +26,12 @@ describe('Document', () => {
   });
 
   describe('#API Routes', () => {
+    let dob;
+
+    beforeEach(() => {
+      dob = { name: 'dob', data: { day: 28, month: 10, year: 1983 } };
+    });
+
     describe('success', () => {
       it('can get a document and return a Status of 200', () => {
         chai.request(app)
@@ -38,14 +43,14 @@ describe('Document', () => {
           });
       });
 
-      it('can post a document and encrypt the payload', () => {
+      it('can post a document and encrypt the data', () => {
         chai.request(app)
           .post('/documents')
           .send(dob)
           .end((err, res) => {
             if (err) { logger.error(err.message); }
             expect(res).to.have.status(200);
-            expect(res.body.hash).to.eql(JSON.stringify(dob.payload));
+            expect(res.body.hash).to.eql(JSON.stringify(dob.data));
           });
       });
 
@@ -60,7 +65,7 @@ describe('Document', () => {
               .end((e, r) => {
                 if (e) { logger.error(e.message); }
                 expect(r).to.have.status(200);
-                expect(res.body.hash).to.eql(JSON.stringify(dob.payload));
+                expect(res.body.hash).to.eql(JSON.stringify(dob.data));
               });
           });
       });
@@ -99,6 +104,28 @@ describe('Document', () => {
                 expect(r.body.rowsUpdated).to.eql(1);
               });
           });
+      });
+    });
+  });
+
+  describe.only('Features', () => {
+    let dob;
+    let document;
+
+    beforeEach(() => {
+      dob = { name: 'dob', data: { day: 28, month: 10, year: 1983 } };
+      document = new Document(dob);
+    });
+
+    describe('#encrypt', () => {
+      describe('success', () => {
+        it('should transform a string to a hash', async () => {
+          const { hash } = await document;
+          bcrypt.compare(JSON.stringify(dob.data), hash, (err, res) => {
+            if (err) { logger.error(err.message, 'test'); }
+            expect(res).to.eql(true);
+          });
+        });
       });
     });
   });

@@ -26,20 +26,18 @@ describe('Document', () => {
       .catch(done);
   });
 
-  describe('#read documents', () => {
-    it('should get a document and return a Status of OK', () => {
-      chai.request(app)
-        .get('/documents')
-        .end((err, res) => {
-          if (err) { logger.error(err.message); }
-          expect(res).to.have.status(200);
-          expect(res.body).to.be.an('Array').with.length(0);
-        });
-    });
-  });
-
-  describe('#create documents', () => {
+  describe('#API Routes', () => {
     describe('success', () => {
+      it('can get a document and return a Status of 200', () => {
+        chai.request(app)
+          .get('/documents')
+          .end((err, res) => {
+            if (err) { logger.error(err.message); }
+            expect(res).to.have.status(200);
+            expect(res.body).to.be.an('Array').with.length(0);
+          });
+      });
+
       it('can post a document and encrypt the payload', () => {
         chai.request(app)
           .post('/documents')
@@ -50,11 +48,23 @@ describe('Document', () => {
             expect(res.body.hash).to.eql(JSON.stringify(dob.payload));
           });
       });
-    });
-  });
 
-  describe('#update documents', () => {
-    describe('success', () => {
+      it('can get a specific document', () => {
+        chai.request(app)
+          .post('/documents')
+          .send(dob)
+          .end((err, res) => {
+            if (err) { logger.error(err.message); }
+            chai.request(app)
+              .get(`/documents/${res.body.id}`)
+              .end((e, r) => {
+                if (e) { logger.error(e.message); }
+                expect(r).to.have.status(200);
+                expect(res.body.hash).to.eql(JSON.stringify(dob.payload));
+              });
+          });
+      });
+
       it('can patch a document', () => {
         chai.request(app)
           .post('/documents')
@@ -73,11 +83,7 @@ describe('Document', () => {
               });
           });
       });
-    });
-  });
 
-  describe('#delete documents', () => {
-    describe('success', () => {
       it('can delete a document', () => {
         chai.request(app)
           .post('/documents')

@@ -1,28 +1,35 @@
 const express = require('express');
+const logger = require('../helpers/logging');
+const queries = require('../db/queries');
 const Document = require('../models/documents');
 
 const router = express.Router();
 
 /* GET home page. */
-router.get('/', (req, res) => {
-  // const document = queries.documentCreate
-  res.status(200).json({ status: 'OK' });
+router.get('/', async (req, res) => {
+  const document = await queries.documentsRead().catch(err => logger.error(err.message));
+  res.status(200).send(document);
 });
 
-router.post('/', (req, res) => {
-  const document = new Document(req.body.name);
-  // queries.documentCreate(document)
-  res.status(200).json(document.encrypt(req.body.payload));
+router.get('/:id', async (req, res) => {
+  const document = await queries.documentsReadById(req.params.id).catch(err => logger.error(err.message));
+  res.status(200).send(document);
 });
 
-router.patch('/', (req, res) => {
-  // const document = queries.documentUpdate
-  res.status(200).json({ dob: req.body });
+router.post('/', async (req, res) => {
+  const document = new Document(req.body);
+  const documentId = await queries.documentsCreate(document).catch(err => logger.error(err.message));
+  res.redirect(`/documents/${documentId[0]}`);
 });
 
-router.delete('/', (req, res) => {
-  // const document = queries.documentDelete
-  res.status(200).json({ dob: req.body });
+router.patch('/:id', async (req, res) => {
+  const rowsUpdated = await queries.documentsUpdate(req.params.id, req.body).catch(err => logger.error(err.message));
+  res.status(200).send({ rowsUpdated });
+});
+
+router.delete('/:id', async (req, res) => {
+  const rowsUpdated = await queries.documentsDelete(req.params.id).catch(err => logger.error(err.message));
+  res.status(200).send({ rowsUpdated });
 });
 
 module.exports = router;

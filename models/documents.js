@@ -1,11 +1,10 @@
 module.exports = class Document {
-  constructor(name) {
-    this.name = name;
-    this.hash = '';
+  constructor(doc) {
+    this.name = doc.name;
+    this.hash = this.constructor.encrypt(doc.payload);
   }
 
-  encrypt(data) {
-    this.hash = data;
-    return data;
+  static encrypt(payload) {
+    return payload;
   }
 };

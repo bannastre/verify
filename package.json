@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "test": "ENV_NAME=test mocha ./test --exit",
-    "start": "ENV_NAME=production node ./bin/www",
-    "start_dev": "ENV_NAME=development node ./bin/www"
+    "start": "NODE_ENV=live node ./bin/www",
+    "start_dev": "NODE_ENV=dev node ./bin/www",
+    "test": "NODE_ENV=test mocha ./test --exit"
   },
   "dependencies": {
     "app-root-path": "^2.1.0",

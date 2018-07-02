@@ -11,9 +11,9 @@ module.exports = {
       directory: `${__dirname}/db/seeds/live`
     }
   },
-  dev: {
+  development: {
     client: 'pg',
-    connection: `${process.env.PG_CONNECTION_STRING}_dev`,
+    connection: `${process.env.PG_CONNECTION_STRING}_development`,
     migrations: {
       directory: `${__dirname}/db/migrations`
     },

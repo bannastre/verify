@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=live node ./bin/www",
-    "start_dev": "NODE_ENV=dev node ./bin/www",
+    "start_dev": "NODE_ENV=development node ./bin/www",
     "test": "NODE_ENV=test mocha ./test --exit"
   },
   "dependencies": {

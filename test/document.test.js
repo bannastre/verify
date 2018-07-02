@@ -50,7 +50,7 @@ describe('Document', () => {
           .end((err, res) => {
             if (err) { logger.error(err.message); }
             expect(res).to.have.status(200);
-            expect(res.body.hash).to.eql(JSON.stringify(dob.data));
+            expect(res.body).to.haveOwnProperty('hash');
           });
       });
 
@@ -65,7 +65,7 @@ describe('Document', () => {
               .end((e, r) => {
                 if (e) { logger.error(e.message); }
                 expect(r).to.have.status(200);
-                expect(res.body.hash).to.eql(JSON.stringify(dob.data));
+                expect(res.body).to.haveOwnProperty('hash');
               });
           });
       });
@@ -108,7 +108,7 @@ describe('Document', () => {
     });
   });
 
-  describe.only('Features', () => {
+  describe('Features', () => {
     let dob;
     let document;
 
@@ -120,8 +120,9 @@ describe('Document', () => {
     describe('#encrypt', () => {
       describe('success', () => {
         it('should transform a string to a hash', async () => {
+          const data = JSON.stringify(dob.data);
           const { hash } = await document;
-          bcrypt.compare(JSON.stringify(dob.data), hash, (err, res) => {
+          bcrypt.compare(data, hash, (err, res) => {
             if (err) { logger.error(err.message, 'test'); }
             expect(res).to.eql(true);
           });

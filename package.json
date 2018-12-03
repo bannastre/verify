@@ -20,6 +20,7 @@
     "knex": "^0.14.6",
     "morgan": "~1.9.0",
     "pg": "^7.4.3",
+    "uuid": "^3.3.2",
     "winston": "^3.0.0"
   },
   "devDependencies": {

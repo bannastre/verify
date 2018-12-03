@@ -25,6 +25,7 @@ describe('Document', () => {
       .then(() => done())
       .catch(done);
   });
+
   describe('Hitting all API Routes', () => {
     context('success', () => {
       it('can get a document and return a Status of 200', () => {

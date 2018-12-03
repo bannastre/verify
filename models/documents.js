@@ -1,10 +1,12 @@
 const bcrypt = require('bcrypt');
+const uuid = require('uuid/v4');
 const logger = require('../helpers/logging');
 
 module.exports = class Document {
   constructor(doc) {
     this.name = doc.name;
     this.hash = bcrypt.hashSync(JSON.stringify(doc.data), 10);
+    this.documentId = uuid();
   }
 
   verify(doc) {
